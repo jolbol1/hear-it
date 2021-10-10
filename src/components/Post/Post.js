@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircleIcon from '@mui/icons-material/PauseCircle';
 import {useSpeechSynthesis} from "react-speech-kit";
+import {setComment} from "../comment/CommentSlice";
 
 
 export const Post = (props) => {
@@ -40,13 +41,21 @@ export const Post = (props) => {
 
     useEffect(() => {
         if(post.comments) {
-            props.setComment(post.comments[0])
+            dispatch(setComment({
+                id: commentId,
+                body: post.comments[0].body,
+                author: post.comments[0].author
+            }))
         }
     }, [post])
     
     useEffect(() => {
         if(post.comments) {
-            props.setComment(post.comments[commentId])
+            dispatch(setComment({
+                id: commentId,
+                body: post.comments[0].body,
+                author: post.comments[0].author
+            }))
             if (playComment) {
                 console.log(post.comments[commentId])
                 const {body, author} = post.comments[commentId]

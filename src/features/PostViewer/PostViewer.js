@@ -11,7 +11,6 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {
     getPostIndex,
-    getPosts,
     getSelectedSubreddit,
     loadPostsForSelectedSub, setCurrentPostIndex,
     setSelectedSubreddit
@@ -20,10 +19,9 @@ import {Post} from "../../components/Post/Post";
 import {Comment} from "../../components/comment/Comment";
 
 
-export const PostViewer = (props) => {
+export const PostViewer = () => {
     const dispatch = useDispatch();
     const [subInput, setSubInput] = useState('AskReddit')
-    const [comment, setComment] = useState({})
     const subreddit = useSelector(getSelectedSubreddit)
     const postIndex = useSelector(getPostIndex)
 
@@ -69,8 +67,8 @@ export const PostViewer = (props) => {
                     alignItems="flex-end"
                 >
                     <Fab
-                        variant="extended" 
-                        color="primary" 
+                        variant="extended"
+                        color="primary"
                         aria-label="previous post"
                         onClick={() => dispatch(setCurrentPostIndex(postIndex - 1))}
                     >
@@ -79,13 +77,13 @@ export const PostViewer = (props) => {
                     </Fab>
                 </Grid>
                 <Grid item xs={8}>
-                    <Post setComment={setComment}/>
-                    <Comment commentBody={comment.body} commentAuthor={comment.author} />
+                    <Post/>
+                    <Comment/>
                 </Grid>
                 <Grid item xs={2}>
-                    <Fab 
-                        variant="extended" 
-                        color="primary" 
+                    <Fab
+                        variant="extended"
+                        color="primary"
                         aria-label="next post"
                         onClick={() => dispatch(setCurrentPostIndex(postIndex + 1))}
                     >
