@@ -17,12 +17,13 @@ import {
     setSelectedSubreddit
 } from "./PostViewerSlice";
 import {Post} from "../../components/Post/Post";
+import {Comment} from "../../components/comment/Comment";
 
 
 export const PostViewer = (props) => {
     const dispatch = useDispatch();
     const [subInput, setSubInput] = useState('AskReddit')
-    const posts = useSelector(getPosts)
+    const [comment, setComment] = useState({})
     const subreddit = useSelector(getSelectedSubreddit)
     const postIndex = useSelector(getPostIndex)
 
@@ -78,7 +79,8 @@ export const PostViewer = (props) => {
                     </Fab>
                 </Grid>
                 <Grid item xs={8}>
-                    <Post/>
+                    <Post setComment={setComment}/>
+                    <Comment commentBody={comment.body} commentAuthor={comment.author} />
                 </Grid>
                 <Grid item xs={2}>
                     <Fab 

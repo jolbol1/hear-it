@@ -33,7 +33,10 @@ const PostSlice = createSlice({
                 state.post = {
                     title: action.payload[0].data.children[0].data.title,
                     selftext: action.payload[0].data.children[0].data.selftext,
-                    comments: action.payload[1].data.children.filter((comment) => !comment.data.stickied).map((comment) => comment.data.body),
+                    comments: action.payload[1].data.children.filter((comment) => !comment.data.stickied).map((comment) => ({ 
+                        body: comment.data.body,
+                        author: comment.data.author
+                    })),
                     isSelf: action.payload[0].data.children[0].data['is_self'],
                     url: action.payload[0].data.children[0].data.url
                 }

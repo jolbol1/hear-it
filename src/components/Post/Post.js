@@ -12,11 +12,18 @@ export const Post = (props) => {
     const dispatch = useDispatch();
     const post = useSelector(getPost);
     const posts = useSelector(getPosts);
+    const [postAnnounced, setPostAnnounced] = useState(false)
     const postIndex = useSelector(getPostIndex)
+    const announceAuthor = true;
+    const announcePost = true;
     const onEnd = () => {
         setTimeout(() => {
-            setCommentId(commentId + 1)
-        }, 2000)
+            if(postAnnounced || !announcePost) {
+                setCommentId(commentId + 1)
+            } else if(!postAnnounced && announcePost) {
+                setPostAnnounced(true)
+            }
+        }, 1500)
     }
     const { speak, cancel, speaking, supported, voices } = useSpeechSynthesis({
         onEnd,
@@ -32,12 +39,28 @@ export const Post = (props) => {
     }, [posts, postIndex])
 
     useEffect(() => {
-        if (playComment) {
-            console.log(post.comments[commentId])
-            speak({text: post.comments[commentId]})
+        if(post.comments) {
+            props.setComment(post.comments[0])
+        }
+    }, [post])
+    
+    useEffect(() => {
+        if(post.comments) {
+            props.setComment(post.comments[commentId])
+            if (playComment) {
+                console.log(post.comments[commentId])
+                const {body, author} = post.comments[commentId]
+                let speechString;
+                if (commentId === 0 && announcePost && !postAnnounced) {
+                    speechString = announceAuthor ? `${author} says... ${post.title}... ${post.body || ''}` : `${post.title}... ${post.body || ''}`
+                } else {
+                    speechString = announceAuthor ? `${author} says... ${body}` : body
+                }
+                speak({text: speechString})
+            }
         }
         return cancel
-    }, [playComment, commentId])
+    }, [playComment, commentId, postAnnounced])
 
     const onPlayComments = () => {
         setPlayComment(true)
