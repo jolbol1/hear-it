@@ -2,8 +2,10 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 export const loadPostsForSelectedSub = createAsyncThunk(
     'postview/loadPosts',
-    async (sub) => {
-        const response = await fetch(`https://api.reddit.com/r/${sub}.json`)
+    async ({sub, sort, sortTime}) => {
+        console.log(sub)
+        const sortString = (sortTime === 'default') ? '' : `&t=${sortTime}`
+        const response = await fetch(`https://api.reddit.com/r/${sub}/${sort}.json?limit=100${sortString}`)
         const json = await response.json()
         const postURLs = json.data.children.filter((post) => !post.data.stickied).map((post) => post.data.permalink)
         return postURLs
@@ -18,7 +20,7 @@ const PostViewerSlice = createSlice({
         posts: [],
         isLoadingPosts: false,
         failedToLoadPosts: false,
-        currentPostIndex: 0
+        currentPostIndex: 0,
     },
     reducers: {
         setSelectedSubreddit(state, action) {
@@ -49,5 +51,6 @@ const PostViewerSlice = createSlice({
 export const getPosts = state => state.postview.posts
 export const getPostIndex = state => state.postview.currentPostIndex
 export const getSelectedSubreddit = state => state.postview.selectedSubreddit
+export const getLoadingPosts = state => state.postview.isLoadingPosts
 export const { setSelectedSubreddit, setCurrentPostIndex } = PostViewerSlice.actions
 export default PostViewerSlice.reducer

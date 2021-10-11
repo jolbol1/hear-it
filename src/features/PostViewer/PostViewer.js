@@ -17,6 +17,13 @@ import {
 } from "./PostViewerSlice";
 import {Post} from "../../components/Post/Post";
 import {Comment} from "../../components/comment/Comment";
+import {Options} from "../../components/Options/Options";
+import {
+    getPostSortMethod,
+    getPostSortMethods,
+    getPostSortTime,
+    getSortTimes
+} from "../../components/Options/OptionsSlice";
 
 
 export const PostViewer = () => {
@@ -24,22 +31,29 @@ export const PostViewer = () => {
     const [subInput, setSubInput] = useState('AskReddit')
     const subreddit = useSelector(getSelectedSubreddit)
     const postIndex = useSelector(getPostIndex)
+    const [open, setOpen] = useState(false)
+    const postSortMethod = useSelector(getPostSortMethod)
+    const sortMethods = useSelector(getPostSortMethods)
+    const sortMethod = sortMethods[postSortMethod]
+    const sortTimes = useSelector(getSortTimes)
+    const currentSortTime = useSelector(getPostSortTime)
+    const sortTime = sortTimes[currentSortTime]
 
     useEffect(() => {
-        dispatch(loadPostsForSelectedSub(subreddit))
+        console.log(sortTime)
+        dispatch(loadPostsForSelectedSub({sub: subreddit, sort: sortMethod, sortTime: sortTime}))
         dispatch(setCurrentPostIndex(0))
-    }, [subreddit])
+    }, [subreddit, postSortMethod, currentSortTime])
 
     return (
         <Grid container
-              spacing={2}
+              spacing={5}
               alignItems="center"
               justifyContent="center"
-              columnSpacing={{xs: 1, sm: 2, md: 3}}
               direction="column"
         >
-            <Grid item xs={4}>
-                <Stack spacing={2}>
+            <Grid item marginBottom={2}>
+                <Stack spacing={1}>
                     <TextField
                         id="subreddit-input"
                         label="Subreddit"
@@ -49,10 +63,14 @@ export const PostViewer = () => {
                     />
                     <Button
                         variant="contained"
-                        style={{marginTop: 0, marginBottom: 8}}
                         onClick={() => dispatch(setSelectedSubreddit(subInput))}
                     >
                         Load</Button>
+                    <Button
+                        variant="contained"
+                        onClick={() => setOpen(true)}
+                    >
+                        Options</Button>
                 </Stack>
             </Grid>
             <Grid container
@@ -77,6 +95,7 @@ export const PostViewer = () => {
                     </Fab>
                 </Grid>
                 <Grid item xs={8}>
+                    <Options open={open} setOpen={setOpen}/>
                     <Post/>
                     <Comment/>
                 </Grid>
