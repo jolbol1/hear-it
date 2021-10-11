@@ -45,15 +45,13 @@ export const PostViewer = () => {
         dispatch(setCurrentPostIndex(0))
     }, [subreddit, postSortMethod, currentSortTime])
 
+    //TODO - At 500px add the controls to their own card, extend remaining components to fill screen.
     return (
-        <Grid container
-              spacing={5}
-              alignItems="center"
-              justifyContent="center"
-              direction="column"
+        <Grid x={{ flexGrow: 1 }} container spacing={2}
+              height="100vh"
         >
-            <Grid item marginBottom={2}>
-                <Stack spacing={1}>
+            <Grid item xs={12} display="flex" alignItems="center" justifyContent="center">
+                <Stack spacing={1} width="500px">
                     <TextField
                         id="subreddit-input"
                         label="Subreddit"
@@ -73,44 +71,34 @@ export const PostViewer = () => {
                         Options</Button>
                 </Stack>
             </Grid>
-            <Grid container
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="center"
-                  columnSpacing={{xs: 1, sm: 2, md: 3}}
-            >
-                <Grid
-                    container xs={2}
-                    justifyContent="flex-end"
-                    alignItems="flex-end"
+
+            <Grid item xs={2} display="flex" alignItems="center" justifyContent="center">
+                <Fab
+                    variant="extended"
+                    color="primary"
+                    aria-label="previous post"
+                    onClick={() => dispatch(setCurrentPostIndex(postIndex - 1))}
                 >
-                    <Fab
-                        variant="extended"
-                        color="primary"
-                        aria-label="previous post"
-                        onClick={() => dispatch(setCurrentPostIndex(postIndex - 1))}
-                    >
-                        <ArrowBackIosNewIcon/>
-                        Prior
-                    </Fab>
-                </Grid>
-                <Grid item xs={8}>
-                    <Options open={open} setOpen={setOpen}/>
-                    <Post/>
-                    <Comment/>
-                </Grid>
-                <Grid item xs={2}>
-                    <Fab
-                        variant="extended"
-                        color="primary"
-                        aria-label="next post"
-                        onClick={() => dispatch(setCurrentPostIndex(postIndex + 1))}
-                    >
-                        <ArrowForwardIosIcon/>
-                        Next
-                    </Fab>
-                </Grid>
+                    <ArrowBackIosNewIcon/>
+                    Prior
+                </Fab>
             </Grid>
+            <Grid item xs maxHeight="100%">
+                <Post/>
+                <Comment/>
+            </Grid>
+            <Grid item xs={2} display="flex" alignItems="center" justifyContent="center">
+                <Fab
+                    variant="extended"
+                    color="primary"
+                    aria-label="next post"
+                    onClick={() => dispatch(setCurrentPostIndex(postIndex + 1))}
+                >
+                    <ArrowForwardIosIcon/>
+                    Next
+                </Fab>
+            </Grid>
+            <Options open={open} setOpen={setOpen}/>
         </Grid>
     )
 }
